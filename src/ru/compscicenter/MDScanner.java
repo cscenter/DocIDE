@@ -24,7 +24,7 @@ public class MDScanner {
             }
 
         } catch (IOException e) {
-            System.err.format("exception while parsing \\n%s", e.getMessage());
+            System.err.format("exception while parsing %s", e.getMessage());
             e.printStackTrace();
         }
 
