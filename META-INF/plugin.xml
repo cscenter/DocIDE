@@ -37,9 +37,20 @@
     </project-components>
 
     <actions>
-        <action id="ScanFile" class="ru.compscicenter.ScanFile" text="ScanFile">
+        <action id="DocIDE.ScanFile" class="ru.compscicenter.ScanFile" text="ScanFile">
             <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl CLOSE_BRACKET"/>
         </action>
+
+        <group id="DocIDE.Menu" text="DocIDE" description="DocIDE">
+            <reference ref="DocIDE.ScanFile"/>
+
+
+            <!--adds this group to the main menu-->
+            <add-to-group group-id="MainMenu" anchor="last"/>
+            <!--adds this group to the main toolbar before the Help action-->
+            <add-to-group group-id="MainToolBar" anchor="before" relative-to-action="HelpTopics"/>
+        </group>
+
     </actions>
 
 </idea-plugin>
