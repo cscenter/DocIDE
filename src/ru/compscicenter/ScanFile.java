@@ -15,16 +15,16 @@ public class ScanFile extends AnAction {
     public void actionPerformed(AnActionEvent event) {
 
         Project project = event.getData(PlatformDataKeys.PROJECT);
-        String fileName = Messages.showInputDialog(
-                project, "FileName?", "File name", Messages.getQuestionIcon()
+        String dirName = Messages.showInputDialog(
+                project, "Directory Name?", "Directory", Messages.getQuestionIcon()
         );
         MDScanner scanner = new MDScanner();
-        DocumentMetaInfo meta = scanner.parseFile(fileName);
-        System.out.println(meta.getMetaInf());
+
+        DocumentMetaInfo meta = scanner.scanDirectory(dirName).get("test.md");
         Messages.showMessageDialog(
                 project,
                 meta.getMetaInf().toString(),
-                "Information",
+                "test.md meta",
                 Messages.getInformationIcon()
         );
     }

@@ -1,5 +1,4 @@
 DocIDE
 ======
 
-IDE for collobarative document editing   
-@readme
+IDE for collobarative document editing
