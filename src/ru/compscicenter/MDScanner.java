@@ -13,15 +13,23 @@ public class MDScanner {
     static final String SAMPLE_DATA = "sample_data";
 
     public DocumentMetaInfo parseFile(File file) throws IOException {
+
         DocumentMetaInfo metaInfo = new DocumentMetaInfo();
-        Pattern metaInfoPattern = Pattern.compile("@(\\w+)");
+        Pattern metaInfoPattern = Pattern.compile("@(\\w+)(\\{(\\w+)\\})?");
         Matcher matcher;
         BufferedReader in = new BufferedReader(new FileReader(file));
         String line;
+
         while (in.ready()) {
             line = in.readLine();
             matcher = metaInfoPattern.matcher(line);
-            if (matcher.matches()) metaInfo.addTag(matcher.group(1));
+            if (matcher.matches()) {
+                if (matcher.group(3) == null) {
+                    metaInfo.addTag(matcher.group(1));
+                } else {
+                    metaInfo.addProperty(matcher.group(1), matcher.group(3));
+                }
+            }
         }
 
         return metaInfo;
