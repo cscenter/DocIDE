@@ -37,12 +37,12 @@
     </project-components>
 
     <actions>
-        <action id="DocIDE.ScanFile" class="ru.compscicenter.ScanFile" text="ScanFile">
+        <action id="DocIDE.Scanner" class="ru.compscicenter.ScannerAction" text="Scanner">
             <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl CLOSE_BRACKET"/>
         </action>
 
         <group id="DocIDE.Menu" text="DocIDE" description="DocIDE">
-            <reference ref="DocIDE.ScanFile"/>
+            <reference ref="DocIDE.Scanner"/>
 
 
             <!--adds this group to the main menu-->

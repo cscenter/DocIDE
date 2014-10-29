@@ -9,7 +9,7 @@ import com.intellij.openapi.ui.Messages;
 /**
  * @author oik77
  */
-public class ScanFile extends AnAction {
+public class ScannerAction extends AnAction {
 
 
     public void actionPerformed(AnActionEvent event) {
