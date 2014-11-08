@@ -1,7 +1,12 @@
 package ru.compscicenter;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
+
 import java.io.*;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,23 +19,22 @@ public class MDScanner {
 
     public DocumentMetaInfo parseFile(File file) throws IOException {
 
+        System.out.printf("parse %s\n", file.getName());
         DocumentMetaInfo metaInfo = new DocumentMetaInfo();
         Pattern metaInfoPattern = Pattern.compile("@(\\w+)(\\{(\\w+)\\})?");
-        Matcher matcher;
-        BufferedReader in = new BufferedReader(new FileReader(file));
-        String line;
 
-        while (in.ready()) {
-            line = in.readLine();
-            matcher = metaInfoPattern.matcher(line);
-            if (matcher.matches()) {
-                if (matcher.group(3) == null) {
-                    metaInfo.addTag(matcher.group(1));
-                } else {
-                    metaInfo.addProperty(matcher.group(1), matcher.group(3));
+        Files.readLines(file, Charsets.UTF_8)
+            .stream()
+            .forEach(line -> {
+                Matcher matcher = metaInfoPattern.matcher(line);
+                if (matcher.matches()) {
+                    if (matcher.group(3) == null) {
+                        metaInfo.addTag(matcher.group(1));
+                    } else {
+                        metaInfo.addProperty(matcher.group(1), matcher.group(3));
+                    }
                 }
-            }
-        }
+            });
 
         return metaInfo;
     }
@@ -39,12 +43,12 @@ public class MDScanner {
         File directory = new File(path);
         if (!directory.isDirectory()) return null;
 
-        File[] files = directory.listFiles();
         Map<String, DocumentMetaInfo> table = new HashMap<>();
 
-
-        for (File f : files) {
-            if (f.isFile() && f.getName().matches("\\w+.md")) {
+        Arrays.asList(directory.listFiles())
+            .stream()
+            .filter(f -> f.isFile() && Files.getFileExtension(f.getName()).equals("md"))
+            .forEach(f -> {
                 try {
                     table.put(
                             f.getName(),
@@ -54,8 +58,7 @@ public class MDScanner {
                     System.err.printf("Exception while parsing %s\\n", f.getName());
                     e.printStackTrace();
                 }
-            }
-        }
+            });
 
         return table;
     }

@@ -23,7 +23,7 @@ public class ScannerAction extends AnAction {
         DocumentMetaInfo meta = scanner.scanDirectory(dirName).get("test.md");
         Messages.showMessageDialog(
                 project,
-                meta.getMetaInf().toString(),
+                meta.getMetaInf(),
                 "test.md meta",
                 Messages.getInformationIcon()
         );

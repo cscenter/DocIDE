@@ -6,7 +6,7 @@ import java.util.Properties;
  * @author oik77
  */
 public class DocumentMetaInfo {
-    Properties meta;
+    private Properties meta;
 
     public DocumentMetaInfo() {
         meta = new Properties();
@@ -20,8 +20,8 @@ public class DocumentMetaInfo {
         meta.setProperty(tag, "True");
     }
 
-    public Properties getMetaInf() {
-        return meta;
+    public String getMetaInf() {
+        return meta.toString();
     }
 
 }
