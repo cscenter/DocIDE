@@ -1,4 +1,4 @@
-package ru.compscicenter;
+package ru.compscicenter.docide.action;
 
 import java.util.Properties;
 

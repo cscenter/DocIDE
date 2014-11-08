@@ -1,4 +1,4 @@
-package ru.compscicenter;
+package ru.compscicenter.docide.action;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
@@ -6,7 +6,6 @@ import com.google.common.io.Files;
 import java.io.*;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

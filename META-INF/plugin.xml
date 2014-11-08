@@ -25,7 +25,7 @@
     -->
 
     <extensions defaultExtensionNs="com.intellij">
-        <!-- Add your extensions here -->
+        <fileTypeFactory implementation="ru.compscicenter.docide.language.RDFileTypeFactory"/>
     </extensions>
 
     <application-components>
@@ -37,7 +37,7 @@
     </project-components>
 
     <actions>
-        <action id="DocIDE.Scanner" class="ru.compscicenter.ScannerAction" text="Scanner">
+        <action id="DocIDE.Scanner" class="ru.compscicenter.docide.action.ScannerAction" text="Scanner">
             <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl CLOSE_BRACKET"/>
         </action>
 
