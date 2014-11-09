@@ -1,0 +1,20 @@
+{
+  parserClass="ru.compscicenter.docide.language.parser.RDParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="RD"
+  psiImplClassSuffix="Impl"
+  psiPackage="ru.compscicenter.docide.language.psi"
+  psiImplPackage="ru.compscicenter.docide.language.psi.impl"
+
+  elementTypeHolderClass="ru.compscicenter.docide.language.psi.RDTypes"
+  elementTypeClass="ru.compscicenter.docide.language.psi.RDElementType"
+  tokenTypeClass="ru.compscicenter.docide.language.psi.RDTokenType"
+}
+
+RDFile ::= item_*
+
+private item_ ::= (property|COMMENT|CRLF)
+
+property ::= (KEY? SEPARATOR VALUE?) | KEY

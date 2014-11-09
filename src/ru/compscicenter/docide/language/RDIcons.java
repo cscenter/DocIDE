@@ -8,5 +8,5 @@ import javax.swing.*;
  * @author oik77.
  */
 public class RDIcons {
-    public static final Icon FILE = IconLoader.getIcon("/ru/compscicenter/docide/icons/jar-gray.png");
+    public static final Icon FILE = IconLoader.getIcon("/ru/compscicenter/docide/language/icons/jar-gray.png");
 }
