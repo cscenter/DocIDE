@@ -6,6 +6,8 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 
+import java.util.Map;
+
 /**
  * @author oik77
  */
@@ -20,10 +22,19 @@ public class ScannerAction extends AnAction {
         );
         MDScanner scanner = new MDScanner();
 
-        DocumentMetaInfo meta = scanner.scanDirectory(dirName).get("test.md");
+        Map<String, DocumentMetaInfo> meta = scanner.scanDirectory(dirName);
+        String message;
+        if (meta == null) {
+            message = "no such folder";
+        } else {
+            message = meta.get("test.md") == null ?
+                    "test.md not found" :
+                    meta.get("test.md").getMetaInf();
+        }
+
         Messages.showMessageDialog(
                 project,
-                meta.getMetaInf(),
+                message,
                 "test.md meta",
                 Messages.getInformationIcon()
         );
