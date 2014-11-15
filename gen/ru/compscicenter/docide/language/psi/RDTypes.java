@@ -9,11 +9,14 @@ import ru.compscicenter.docide.language.psi.impl.*;
 public interface RDTypes {
 
   IElementType PROPERTY = new RDElementType("PROPERTY");
+  IElementType TAG = new RDElementType("TAG");
 
+  IElementType AT = new RDTokenType("AT");
   IElementType COMMENT = new RDTokenType("COMMENT");
   IElementType CRLF = new RDTokenType("CRLF");
   IElementType KEY = new RDTokenType("KEY");
-  IElementType SEPARATOR = new RDTokenType("SEPARATOR");
+  IElementType LBR = new RDTokenType("LBR");
+  IElementType RBR = new RDTokenType("RBR");
   IElementType VALUE = new RDTokenType("VALUE");
 
   class Factory {
@@ -21,6 +24,9 @@ public interface RDTypes {
       IElementType type = node.getElementType();
        if (type == PROPERTY) {
         return new RDPropertyImpl(node);
+      }
+      else if (type == TAG) {
+        return new RDTagImpl(node);
       }
       throw new AssertionError("Unknown element type: " + type);
     }

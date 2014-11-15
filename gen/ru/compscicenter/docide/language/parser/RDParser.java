@@ -23,6 +23,9 @@ public class RDParser implements PsiParser {
     if (root_ == PROPERTY) {
       result_ = property(builder_, 0);
     }
+    else if (root_ == TAG) {
+      result_ = tag(builder_, 0);
+    }
     else {
       result_ = parse_root_(root_, builder_, 0);
     }
@@ -48,12 +51,13 @@ public class RDParser implements PsiParser {
   }
 
   /* ********************************************************** */
-  // property|COMMENT|CRLF
+  // property|tag|COMMENT|CRLF
   static boolean item_(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "item_")) return false;
     boolean result_;
     Marker marker_ = enter_section_(builder_);
     result_ = property(builder_, level_ + 1);
+    if (!result_) result_ = tag(builder_, level_ + 1);
     if (!result_) result_ = consumeToken(builder_, COMMENT);
     if (!result_) result_ = consumeToken(builder_, CRLF);
     exit_section_(builder_, marker_, null, result_);
@@ -61,42 +65,27 @@ public class RDParser implements PsiParser {
   }
 
   /* ********************************************************** */
-  // (KEY? SEPARATOR VALUE?) | KEY
+  // AT KEY LBR VALUE RBR
   public static boolean property(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "property")) return false;
-    if (!nextTokenIs(builder_, "<property>", KEY, SEPARATOR)) return false;
-    boolean result_;
-    Marker marker_ = enter_section_(builder_, level_, _NONE_, "<property>");
-    result_ = property_0(builder_, level_ + 1);
-    if (!result_) result_ = consumeToken(builder_, KEY);
-    exit_section_(builder_, level_, marker_, PROPERTY, result_, false, null);
-    return result_;
-  }
-
-  // KEY? SEPARATOR VALUE?
-  private static boolean property_0(PsiBuilder builder_, int level_) {
-    if (!recursion_guard_(builder_, level_, "property_0")) return false;
+    if (!nextTokenIs(builder_, AT)) return false;
     boolean result_;
     Marker marker_ = enter_section_(builder_);
-    result_ = property_0_0(builder_, level_ + 1);
-    result_ = result_ && consumeToken(builder_, SEPARATOR);
-    result_ = result_ && property_0_2(builder_, level_ + 1);
-    exit_section_(builder_, marker_, null, result_);
+    result_ = consumeTokens(builder_, 0, AT, KEY, LBR, VALUE, RBR);
+    exit_section_(builder_, marker_, PROPERTY, result_);
     return result_;
   }
 
-  // KEY?
-  private static boolean property_0_0(PsiBuilder builder_, int level_) {
-    if (!recursion_guard_(builder_, level_, "property_0_0")) return false;
-    consumeToken(builder_, KEY);
-    return true;
-  }
-
-  // VALUE?
-  private static boolean property_0_2(PsiBuilder builder_, int level_) {
-    if (!recursion_guard_(builder_, level_, "property_0_2")) return false;
-    consumeToken(builder_, VALUE);
-    return true;
+  /* ********************************************************** */
+  // AT KEY
+  public static boolean tag(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "tag")) return false;
+    if (!nextTokenIs(builder_, AT)) return false;
+    boolean result_;
+    Marker marker_ = enter_section_(builder_);
+    result_ = consumeTokens(builder_, 0, AT, KEY);
+    exit_section_(builder_, marker_, TAG, result_);
+    return result_;
   }
 
 }

@@ -15,6 +15,7 @@
 
 RDFile ::= item_*
 
-private item_ ::= (property|COMMENT|CRLF)
+private item_ ::= (property|tag|COMMENT|CRLF)
 
-property ::= (KEY? SEPARATOR VALUE?) | KEY
+tag ::= AT KEY
+property ::= AT KEY LBR VALUE RBR
