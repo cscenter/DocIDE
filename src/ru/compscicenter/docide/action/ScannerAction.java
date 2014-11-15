@@ -5,7 +5,10 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import ru.compscicenter.docide.language.RDUtil;
+import ru.compscicenter.docide.language.psi.RDProperty;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,26 +20,16 @@ public class ScannerAction extends AnAction {
     public void actionPerformed(AnActionEvent event) {
 
         Project project = event.getData(PlatformDataKeys.PROJECT);
-        String dirName = Messages.showInputDialog(
-                project, "Directory Name?", "Directory", Messages.getQuestionIcon()
+        String property = Messages.showInputDialog(
+                project, "Property Name?", "Property", Messages.getQuestionIcon()
         );
-        MDScanner scanner = new MDScanner();
 
-        Map<String, DocumentMetaInfo> meta = scanner.scanDirectory(dirName);
-        String message;
-        if (meta == null) {
-            message = "no such folder";
-        } else {
-            message = meta.get("test.md") == null ?
-                    "test.md not found" :
-                    meta.get("test.md").getMetaInf();
-        }
+        List<RDProperty> properties = RDUtil.findProperties(project, property);
 
-        Messages.showMessageDialog(
-                project,
-                message,
-                "test.md meta",
-                Messages.getInformationIcon()
-        );
+        properties
+                .stream()
+                .forEach(prop ->
+                        System.out.println(prop.getKey() + '-' + prop.getValue())
+                );
     }
 }

@@ -22,4 +22,12 @@ public class RDPropertyImpl extends ASTWrapperPsiElement implements RDProperty {
     else super.accept(visitor);
   }
 
+  public String getKey() {
+    return RDPsiImplUtil.getKey(this);
+  }
+
+  public String getValue() {
+    return RDPsiImplUtil.getValue(this);
+  }
+
 }

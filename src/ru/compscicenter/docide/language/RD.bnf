@@ -11,6 +11,8 @@
   elementTypeHolderClass="ru.compscicenter.docide.language.psi.RDTypes"
   elementTypeClass="ru.compscicenter.docide.language.psi.RDElementType"
   tokenTypeClass="ru.compscicenter.docide.language.psi.RDTokenType"
+
+  psiImplUtilClass="ru.compscicenter.docide.language.psi.impl.RDPsiImplUtil"
 }
 
 RDFile ::= item_*
@@ -18,4 +20,4 @@ RDFile ::= item_*
 private item_ ::= (property|tag|COMMENT|CRLF)
 
 tag ::= AT KEY
-property ::= AT KEY LBR VALUE RBR
+property ::= AT KEY LBR VALUE RBR {methods=[getKey getValue]}
