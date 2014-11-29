@@ -5,20 +5,22 @@ import com.intellij.ide.structureView.StructureViewBuilder;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorLocation;
-import com.intellij.openapi.fileEditor.FileEditorState;
-import com.intellij.openapi.fileEditor.FileEditorStateLevel;
+import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.UserDataHolderBase;
+import com.intellij.psi.PsiManager;
 import com.intellij.ui.components.JBScrollPane;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ru.compscicenter.docide.language.RDUtil;
+import ru.compscicenter.docide.language.psi.RDProperty;
 
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author oik77.
@@ -120,14 +122,34 @@ public class RDPreviewEditor extends UserDataHolderBase implements FileEditor {
         return document.getText() != null;
     }
 
+    private String propertiesToString(Collection<RDProperty> properties) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        properties
+                .stream()
+                .forEach(property ->
+                        stringBuilder
+                                .append(property.getKey())
+                                .append(" = ")
+                                .append(property.getValue())
+                                .append("\n")
+                );
+
+        return stringBuilder.toString();
+    }
+
     /**
      * Invoked when the editor is selected.
      * <p/>
      */
     public void selectNotify() {
         if (previewIsObsolete) {
+            List<RDProperty> properties = RDUtil.findProperties(
+                    project,
+                    FileDocumentManager.getInstance().getFile(document)
+                );
             try {
-                jEditorPane.setText("HELLO WORLD!");
+                jEditorPane.setText(propertiesToString(properties));
                 previewIsObsolete = false;
             } catch (Exception e) {
                 e.printStackTrace();
