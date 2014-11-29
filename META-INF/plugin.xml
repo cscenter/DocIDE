@@ -27,6 +27,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <fileTypeFactory implementation="ru.compscicenter.docide.language.RDFileTypeFactory"/>
         <lang.parserDefinition language="RD" implementationClass="ru.compscicenter.docide.language.RDParserDefinition"/>
+        <fileEditorProvider implementation="ru.compscicenter.docide.editor.RDPreviewEditorProvider"/>
     </extensions>
 
     <application-components>
