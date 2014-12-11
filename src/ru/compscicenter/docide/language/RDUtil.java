@@ -8,8 +8,8 @@ import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.indexing.FileBasedIndex;
-import ru.compscicenter.docide.language.psi.RDFile;
-import ru.compscicenter.docide.language.psi.RDProperty;
+import com.yourkit.util.Strings;
+import ru.compscicenter.docide.language.psi.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -129,5 +129,24 @@ public class RDUtil {
         if (properties == null) return Collections.<RDProperty>emptyList();
 
         return Arrays.asList(properties);
+    }
+
+    public static List<String> findCols(Project project, VirtualFile virtualFile) {
+        RDFile rdFile = (RDFile) PsiManager.getInstance(project).findFile(virtualFile);
+        if (rdFile == null) return null;
+
+        RDReport[] reports =
+                PsiTreeUtil.getChildrenOfType(rdFile, RDReport.class);
+        if (reports == null) return Collections.<String>emptyList();
+
+        return Arrays.asList(reports)
+                .stream()
+                .map(report -> String.join(",",
+                    Arrays.asList(PsiTreeUtil.getChildrenOfType(report, RDColumn.class))
+                            .stream()
+                            .map(column -> column.getKey() + "as" + column.getValue())
+                            .collect(Collectors.toList()))
+                )
+                .collect(Collectors.toList());
     }
 }

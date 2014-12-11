@@ -7,7 +7,19 @@ import com.intellij.psi.PsiElement;
 
 public class RDVisitor extends PsiElementVisitor {
 
+  public void visitColumn(@NotNull RDColumn o) {
+    visitPsiElement(o);
+  }
+
   public void visitProperty(@NotNull RDProperty o) {
+    visitPsiElement(o);
+  }
+
+  public void visitReport(@NotNull RDReport o) {
+    visitPsiElement(o);
+  }
+
+  public void visitRestriction(@NotNull RDRestriction o) {
     visitPsiElement(o);
   }
 

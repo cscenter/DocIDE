@@ -1,8 +1,12 @@
 package ru.compscicenter.docide.language.psi.impl;
 
 import com.intellij.lang.ASTNode;
-import ru.compscicenter.docide.language.psi.RDProperty;
-import ru.compscicenter.docide.language.psi.RDTypes;
+import org.jetbrains.annotations.NotNull;
+import ru.compscicenter.docide.language.psi.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author oik77.
@@ -25,4 +29,41 @@ public class RDPsiImplUtil {
             return null;
         }
     }
+
+    public static String getKey(RDColumn element) {
+        ASTNode valueNode = element.getNode().findChildByType(RDTypes.KEY);
+        if (valueNode != null) {
+            return valueNode.getText();
+        } else {
+            return null;
+        }
+    }
+
+    public static String getValue(RDColumn element) {
+        ASTNode valueNode = element.getNode().findChildByType(RDTypes.VALUE);
+        if (valueNode != null) {
+            return valueNode.getText();
+        } else {
+            return null;
+        }
+    }
+
+    public static String getKey(RDRestriction element) {
+        ASTNode valueNode = element.getNode().findChildByType(RDTypes.KEY);
+        if (valueNode != null) {
+            return valueNode.getText();
+        } else {
+            return null;
+        }
+    }
+
+    public static String getValue(RDRestriction element) {
+        ASTNode valueNode = element.getNode().findChildByType(RDTypes.VALUE);
+        if (valueNode != null) {
+            return valueNode.getText();
+        } else {
+            return null;
+        }
+    }
+
 }

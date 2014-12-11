@@ -9,6 +9,7 @@ import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.UserDataHolderBase;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.ui.components.JBScrollPane;
 import org.jetbrains.annotations.NonNls;
@@ -143,13 +144,18 @@ public class RDPreviewEditor extends UserDataHolderBase implements FileEditor {
      * <p/>
      */
     public void selectNotify() {
+        VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(document);
         if (previewIsObsolete) {
             List<RDProperty> properties = RDUtil.findProperties(
-                    project,
-                    FileDocumentManager.getInstance().getFile(document)
+                    project, virtualFile
                 );
+
             try {
-                jEditorPane.setText(propertiesToString(properties));
+                jEditorPane.setText(
+                        propertiesToString(properties) + '\n' +
+                        "======================================\n" +
+                        String.join("\n", RDUtil.findCols(project, virtualFile))
+                );
                 previewIsObsolete = false;
             } catch (Exception e) {
                 e.printStackTrace();
