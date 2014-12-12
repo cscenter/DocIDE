@@ -44,7 +44,7 @@ public class RDPsiImplUtil {
         if (valueNode != null) {
             return valueNode.getText();
         } else {
-            return null;
+            return getKey(element);
         }
     }
 

@@ -61,14 +61,32 @@ public class RDParser implements PsiParser {
   }
 
   /* ********************************************************** */
-  // KEY AS VALUE
+  // KEY (AS VALUE)?
   public static boolean column(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "column")) return false;
     if (!nextTokenIs(b, KEY)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, KEY, AS, VALUE);
+    r = consumeToken(b, KEY);
+    r = r && column_1(b, l + 1);
     exit_section_(b, m, COLUMN, r);
+    return r;
+  }
+
+  // (AS VALUE)?
+  private static boolean column_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "column_1")) return false;
+    column_1_0(b, l + 1);
+    return true;
+  }
+
+  // AS VALUE
+  private static boolean column_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "column_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeTokens(b, 0, AS, VALUE);
+    exit_section_(b, m, null, r);
     return r;
   }
 

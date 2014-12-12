@@ -25,5 +25,5 @@ report ::= EXEC column (SEP column)* (WHERE restriction (AND restriction)*)? RBR
 
 property ::= AT KEY LBR VALUE RBR {methods=[getKey getValue]}
 
-column ::= KEY AS VALUE {methods=[getKey getValue]}
+column ::= KEY (AS VALUE)? {methods=[getKey getValue]}
 restriction ::= KEY EQ VALUE {methods=[getKey getValue]}
