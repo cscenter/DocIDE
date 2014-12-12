@@ -9,6 +9,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.yourkit.util.Strings;
+import ru.compscicenter.docide.editor.Table;
 import ru.compscicenter.docide.language.psi.*;
 
 import java.util.*;
@@ -52,75 +53,6 @@ public class RDUtil {
         return result.isEmpty() ? Collections.<RDProperty>emptyList() :  result;
     }
 
-    public static List<RDProperty> findProperties(Project project) {
-
-        List<RDProperty> result = new ArrayList<>();
-        Collection<VirtualFile> virtualFiles = getAllVirtualFiles(project);
-
-        virtualFiles
-                .stream()
-                .map(virtualFile ->
-                        (RDFile) PsiManager.getInstance(project).findFile(virtualFile))
-                .filter(rdFile -> rdFile != null)
-                .map(rdFile -> PsiTreeUtil.getChildrenOfType(rdFile, RDProperty.class))
-                .filter(properties -> properties != null)
-                .forEach(properties -> Collections.addAll(result, properties));
-
-        return result;
-    }
-
-    public static Map<String, List<RDProperty>> indexFiles(Project project) {
-        Collection<VirtualFile> virtualFiles = getAllVirtualFiles(project);
-        Map<String, List<RDProperty>> index = new HashMap<>();
-
-        virtualFiles
-                .stream()
-                .map(virtualFile ->
-                        (RDFile) PsiManager.getInstance(project).findFile(virtualFile)
-                )
-                .filter(rdFile -> rdFile != null)
-                .forEach(rdFile -> {
-                    RDProperty[] properties =
-                            PsiTreeUtil.getChildrenOfType(rdFile, RDProperty.class);
-                    List<RDProperty> propertyList = new ArrayList<>();
-                    if (properties != null) Collections.addAll(propertyList, properties);
-                    index.put(
-                            rdFile.getName(),
-                            propertyList
-                    );
-                });
-
-        return index;
-    }
-
-    public static List<String> selectFiles(
-            Project project, String key, String value
-    ) {
-        Collection<VirtualFile> virtualFiles = getAllVirtualFiles(project);
-
-        return virtualFiles
-                .stream()
-                .map(virtualFile ->
-                        (RDFile) PsiManager.getInstance(project).findFile(virtualFile)
-                )
-                .filter(rdFile -> rdFile != null)
-                .filter(rdFile -> {
-                    RDProperty[] properties =
-                            PsiTreeUtil.getChildrenOfType(rdFile, RDProperty.class);
-                    if (properties == null) return false;
-                    List<RDProperty> propertyList = Arrays.asList(properties);
-
-                    return propertyList
-                            .stream()
-                            .anyMatch(property ->
-                                    key.equals(property.getKey()) &&
-                                            value.equals(property.getValue())
-                            );
-                })
-                .map(PsiFileImpl::getName)
-                .collect(Collectors.toList());
-    }
-
     public static List<RDProperty> findProperties(Project project, VirtualFile virtualFile) {
         RDFile rdFile = (RDFile) PsiManager.getInstance(project).findFile(virtualFile);
         if (rdFile == null) return null;
@@ -148,5 +80,32 @@ public class RDUtil {
                             .collect(Collectors.toList()))
                 )
                 .collect(Collectors.toList());
+    }
+
+
+
+    public static Table createTable(
+            Project project,
+            Map<String, String> columnNames,
+            Map<String, String> restrictions
+    ) {
+        Table res = new Table(columnNames);
+        Collection<VirtualFile> virtualFiles = getAllVirtualFiles(project);
+        List<RDProperty> fileProp;
+        Map<String, String> metaInfo;
+
+        for (VirtualFile virtualFile : virtualFiles) {
+            fileProp = findProperties(project, virtualFile);
+            metaInfo = new HashMap<>();
+
+            //TODO: check restrictions
+            for (RDProperty prop : fileProp) {
+                metaInfo.put(prop.getKey(), prop.getValue());
+            }
+
+            res.put(metaInfo);
+        }
+
+        return res;
     }
 }
