@@ -97,19 +97,26 @@ public class RDUtil {
         List<RDColumn> columns = report.getColumnList();
         List<RDRestriction> restrictions = report.getRestrictionList();
 
+        for (RDColumn column : columns) {
+            System.out.println(column.getKey());
+        }
+        System.out.println();
+        columns.stream()
+                .forEach(col -> System.out.println(col.getKey()+":"+col.getValue()));
+
         Map<String, String> columnNames =
                 columns.stream()
                     .collect(Collectors.toMap(
-                        RDColumn::getKey, RDColumn::getValue,
-                        (v, w) -> v
-                ));
+                            RDColumn::getKey, RDColumn::getValue,
+                            (v, w) -> v
+                    ));
         Map<String, String> restrictionNames =
                 restrictions.stream()
                     .collect(Collectors.toMap(
-                        RDRestriction::getKey, RDRestriction::getValue,
-                        (v, w) -> v
-                ));
-
+                            RDRestriction::getKey, RDRestriction::getValue,
+                            (v, w) -> v
+                    ));
+        System.out.println(columnNames);
 
         return createTable(project, columnNames, restrictionNames);
     }

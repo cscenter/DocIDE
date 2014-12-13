@@ -49,7 +49,7 @@ public class Table {
 
     public void put(List<RDProperty> metaInfo) {
         List<String> column;
-        Set<String> exceptedAttrs = table.keySet();
+        Set<String> exceptedAttrs = new HashSet<>(table.keySet());
         String currentKey;
 
         for (RDProperty entry : metaInfo) {
