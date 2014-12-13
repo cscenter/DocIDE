@@ -22,6 +22,7 @@ import javax.swing.*;
 import java.beans.PropertyChangeListener;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author oik77.
@@ -139,6 +140,15 @@ public class RDPreviewEditor extends UserDataHolderBase implements FileEditor {
         return stringBuilder.toString();
     }
 
+    private String printReports(VirtualFile virtualFile) {
+        return String.join("\n",
+                RDUtil.getReports(project, virtualFile)
+                        .stream()
+                        .map(report -> RDUtil.createTable(project, report).toString())
+                        .collect(Collectors.toList())
+        );
+    }
+
     /**
      * Invoked when the editor is selected.
      * <p/>
@@ -151,11 +161,13 @@ public class RDPreviewEditor extends UserDataHolderBase implements FileEditor {
                 );
 
             try {
+
                 jEditorPane.setText(
                         propertiesToString(properties) + '\n' +
                         "======================================\n" +
-                        String.join("\n", RDUtil.findCols(project, virtualFile))
+                        printReports(virtualFile)
                 );
+
                 previewIsObsolete = false;
             } catch (Exception e) {
                 e.printStackTrace();

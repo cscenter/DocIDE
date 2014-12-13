@@ -82,7 +82,37 @@ public class RDUtil {
                 .collect(Collectors.toList());
     }
 
+    public static List<RDReport> getReports(Project project, VirtualFile virtualFile) {
+        RDFile rdFile = (RDFile) PsiManager.getInstance(project).findFile(virtualFile);
+        if (rdFile == null) return null;
 
+        RDReport[] reports =
+                PsiTreeUtil.getChildrenOfType(rdFile, RDReport.class);
+        if (reports == null) return Collections.<RDReport>emptyList();
+
+        return Arrays.asList(reports);
+    }
+
+    public static Table createTable(Project project, RDReport report) {
+        List<RDColumn> columns = report.getColumnList();
+        List<RDRestriction> restrictions = report.getRestrictionList();
+
+        Map<String, String> columnNames =
+                columns.stream()
+                    .collect(Collectors.toMap(
+                        RDColumn::getKey, RDColumn::getValue,
+                        (v, w) -> v
+                ));
+        Map<String, String> restrictionNames =
+                restrictions.stream()
+                    .collect(Collectors.toMap(
+                        RDRestriction::getKey, RDRestriction::getValue,
+                        (v, w) -> v
+                ));
+
+
+        return createTable(project, columnNames, restrictionNames);
+    }
 
     public static Table createTable(
             Project project,
@@ -91,21 +121,33 @@ public class RDUtil {
     ) {
         Table res = new Table(columnNames);
         Collection<VirtualFile> virtualFiles = getAllVirtualFiles(project);
-        List<RDProperty> fileProp;
-        Map<String, String> metaInfo;
 
-        for (VirtualFile virtualFile : virtualFiles) {
-            fileProp = findProperties(project, virtualFile);
-            metaInfo = new HashMap<>();
-
-            //TODO: check restrictions
-            for (RDProperty prop : fileProp) {
-                metaInfo.put(prop.getKey(), prop.getValue());
-            }
-
-            res.put(metaInfo);
-        }
+        virtualFiles.stream()
+                .map(virtualFile -> findProperties(project, virtualFile))
+                .filter(properties -> hasAll(properties, restrictions))
+                .forEach(res::put);
 
         return res;
     }
+
+
+
+    public static boolean hasAll(
+            Collection<RDProperty> properties,
+            Map<String, String> restrictions
+    ) {
+        Map<String, Boolean> has = new HashMap<>();
+        restrictions.keySet().stream()
+                .forEach(restrictionKey -> has.put(restrictionKey, false));
+
+        properties.stream()
+                .forEach(prop -> {
+                    String hasProp = restrictions.get(prop.getKey());
+                    if (hasProp != null)
+                        has.put(prop.getKey(), prop.getValue().equals(hasProp));
+                });
+
+        return !has.containsValue(false);
+    }
+
 }

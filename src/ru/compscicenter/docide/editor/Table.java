@@ -1,5 +1,7 @@
 package ru.compscicenter.docide.editor;
 
+import ru.compscicenter.docide.language.psi.RDProperty;
+
 import java.util.*;
 
 /**
@@ -26,6 +28,31 @@ public class Table {
         String currentKey;
 
         for (Map.Entry<String, String> entry : metaInfo.entrySet()) {
+            currentKey = entry.getKey();
+            column = table.get(currentKey);
+
+            if (column == null) continue;
+
+            exceptedAttrs.remove(currentKey);
+            column.add(entry.getValue());
+            table.put(currentKey, column);
+        }
+
+        for (String attr : exceptedAttrs) {
+            column = table.get(attr);
+            column.add("nil");
+            table.put(attr, column);
+        }
+
+        ++rowNumber;
+    }
+
+    public void put(List<RDProperty> metaInfo) {
+        List<String> column;
+        Set<String> exceptedAttrs = table.keySet();
+        String currentKey;
+
+        for (RDProperty entry : metaInfo) {
             currentKey = entry.getKey();
             column = table.get(currentKey);
 
