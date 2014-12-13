@@ -1,1 +1,3 @@
-@sample{123}
+@tag{q}
+@name{indir}
+@string{blabla} @num{102}

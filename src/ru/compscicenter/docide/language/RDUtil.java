@@ -102,28 +102,21 @@ public class RDUtil {
         }
         System.out.println();
         columns.stream()
-                .forEach(col -> System.out.println(col.getKey()+":"+col.getValue()));
+                .forEach(col -> System.out.println(col.getKey() + ":" + col.getValue()));
 
-        Map<String, String> columnNames =
-                columns.stream()
-                    .collect(Collectors.toMap(
-                            RDColumn::getKey, RDColumn::getValue,
-                            (v, w) -> v
-                    ));
         Map<String, String> restrictionNames =
                 restrictions.stream()
                     .collect(Collectors.toMap(
                             RDRestriction::getKey, RDRestriction::getValue,
                             (v, w) -> v
                     ));
-        System.out.println(columnNames);
 
-        return createTable(project, columnNames, restrictionNames);
+        return createTable(project, columns, restrictionNames);
     }
 
     public static Table createTable(
             Project project,
-            Map<String, String> columnNames,
+            List<RDColumn> columnNames,
             Map<String, String> restrictions
     ) {
         Table res = new Table(columnNames);

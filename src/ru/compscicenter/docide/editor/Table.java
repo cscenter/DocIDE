@@ -1,19 +1,25 @@
 package ru.compscicenter.docide.editor;
 
+import ru.compscicenter.docide.language.psi.RDColumn;
 import ru.compscicenter.docide.language.psi.RDProperty;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author oik77.
  */
 public class Table {
     private Map<String, List<String>> table;
-    private Map<String, String> columnNames;
+    private List<RDColumn> columnNames;
     private int rowNumber;
 
-    public Table(Map<String, String> columnNames) {
-        Set<String> attrs = columnNames.keySet();
+    public Table(List<RDColumn> columnNames) {
+        Set<String> attrs =
+                columnNames.stream()
+                    .map(RDColumn::getKey)
+                    .collect(Collectors.toSet());
+
         this.columnNames = columnNames;
 
         table = new HashMap<>();
@@ -76,15 +82,15 @@ public class Table {
         Set<String> attrs = table.keySet();
         StringBuilder res = new StringBuilder();
 
-        for (String attr : attrs) {
-            res.append(columnNames.get(attr))
+        for (RDColumn column : columnNames) {
+            res.append(column.getValue())
                 .append("\t");
         }
         res.append("\n");
 
         for (int i = 0; i < rowNumber; ++i) {
-            for (String attr : attrs) {
-                res.append(table.get(attr).get(i)).append("\t");
+            for (RDColumn column : columnNames) {
+                res.append(table.get(column.getKey()).get(i)).append("\t");
             }
             res.append("\n");
         }
